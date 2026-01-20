@@ -25,7 +25,7 @@ class Task(object):
              f.write(content)
         f.close()
         
-  def part6(self):
+    def part6(self):
         f = open('part6.txt', 'w') 
         with open('hours.csv', 'r') as csvfile:
             reader = csv.reader(csvfile)

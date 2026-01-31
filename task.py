@@ -18,9 +18,11 @@ class Task(object):
         return crosstab
 
     def t3(self):
-        crosstab = pd.crosstab(self.df['save_act'], self.df['mortgage'], margins = True)
-        crosstab_pct = crosstab / crosstab.loc['All', 'All']
-        return crosstab_pct
+        percent = self.t2().loc['All']['All']
+        def perc(x): 
+            return x/percent 
+        percentage = self.t2().apply(perc)
+        return percentage
 
 if __name__ == "__main__":
     t = Task()

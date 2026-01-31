@@ -1,54 +1,32 @@
-import os
-from requests import get
 import json
-import csv
+from datetime import datetime, timedelta
+import requests
+import pandas as pd
 import ssl
 ssl._create_default_https_context = ssl._create_unverified_context
 
 class Task(object):
     def __init__(self):
-        self.response = get('https://labrinidis.cs.pitt.edu/cs1656/data/hours.json', verify=False) 
-        self.hours = json.loads(self.response.content) 
+        self.df = pd.read_csv('bank-data.csv')
 
-    def part4(self):
-        with open('hours.csv', 'w', newline='') as csvfile:
-            fieldnames = ['name', 'day', 'time']
-            writer = csv.DictWriter(csvfile, fieldnames=fieldnames)
-            writer.writeheader()
-            writer.writerows(self.hours)
+    def t1(self):
+        MeanIncome = self.df.groupby('sex')['income'].mean()
+        return MeanIncome
         
+    def t2(self):
+        crosstab = pd.crosstab(self.df['save_act'], self.df['mortgage'], margins = True)
+        return crosstab
 
-    def part5(self):
-        f = open('part5.txt', 'w') 
-        with open('hours.csv', 'r') as csvfile:
-             content = csvfile.read()
-             f.write(content)
-        f.close()
-        
-    def part6(self):
-        f = open('part6.txt', 'w') 
-        with open('hours.csv', 'r') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                f.write(str(row))
-        f.close()
-        
+    def t3(self):
+        crosstab = pd.crosstab(self.df['save_act'], self.df['mortgage'], margins = True)
+        crosstab_pct = crosstab / crosstab.loc['All', 'All']
+        return crosstab_pct
 
-    def part7(self):
-        f = open('part7.txt', 'w') 
-        with open('hours.csv', 'r') as csvfile:
-            reader = csv.reader(csvfile)
-            for row in reader:
-                for cell in row:
-                    f.write(str(cell))
-        
-        f.close()
-        
-
-
-if __name__ == '__main__':
-    task = Task()
-    task.part4()
-    task.part5()
-    task.part6()
-    task.part7()
+if __name__ == "__main__":
+    t = Task()
+    print("----T1----" + "\n")
+    print(str(t.t1()) + "\n")
+    print("----T2----" + "\n")
+    print(str(t.t2()) + "\n")
+    print("----T3----" + "\n")
+    print(str(t.t3()) + "\n")
